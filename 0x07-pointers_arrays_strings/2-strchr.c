@@ -1,24 +1,21 @@
 #include "holberton.h"
-/**
- * _strchr - returns a pointer to the first occurrence of the character c
- * in the string s.
- * @s: string
- * @c: Character
- * Return: pointer to the first occurence of the character or pointer to null
- * value if not found
- */
-char *_strchr(char *s, char c)
-{
-	while (*s != '\0')
-	{
-		if (*s == c)
-			return (s);
-		s++;
-	}
+#include <stdio.h>
 
-	if (c == '\0')
-	{
-		return (s);
-	}
-	return (NULL);
+/**
+ * main - check the code for Holberton School students.
+ *
+ * Return: Always 0.
+ */
+int main(void)
+{
+  char *s = "hello";
+  char *f;
+
+  f = _strchr(s, 'l');
+
+  if (f != NULL)
+    {
+      printf("%s\n", f);
+    }
+  return (0);
 }
