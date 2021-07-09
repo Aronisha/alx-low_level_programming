@@ -1,2 +1,5 @@
-!<arch>
-holberton.h/    1570965666  1000  1000  100664  0         `
+#!/bin/bash
+gcc -Wall -pedantic -Werror -Wextra -c *.c
+ar -rc libholberton.a *.o
+ar -t libholberton.a
+ranlib libholberton.a
