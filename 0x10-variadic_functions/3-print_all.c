@@ -1,83 +1,90 @@
-#include <stdio.h>
-#include <stdlib.h>
 #include "variadic_functions.h"
+#include <stdio.h>
 /**
- * print_i - prints int
- * @list: arguement of list
- * @s: seperator
- * Return: none
+ * _printchar - prints a char
+ * @list: list to print from
  */
-void print_i(va_list list, char *s)
+void _printchar(va_list list)
 {
-	printf("%s%d", s, va_arg(list, int));
+	printf("%c", va_arg(list, int));
 }
-/**
- * print_c - prints char
- * @list: arguement char
- * @sep: seperator
- */
-void print_c(va_list list, char *sep)
-{
-	printf("%s%c", sep, va_arg(list, int));
-}
-/**
- * print_s - prints string
- * @sep: seperator
- * @list: list to print
- * Return: none
- */
-void print_s(va_list list, char *sep)
-{
-	char *s;
 
-	s = va_arg(list, char *);
-	if (s == NULL)
-		s = "(nil)";
-	printf("%s%s", sep, s);
-}
+
 /**
- * print_f - prints floats
- * @sep: float to print
- * @list: next arguement of list to print
- * Return: none
+ * _printint - prints an int
+ * @list: list to print from
  */
-void print_f(va_list list, char *sep)
+void _printint(va_list list)
 {
-	printf("%s%f", sep, va_arg(list, double));
+	printf("%d", va_arg(list, int));
 }
+
+
 /**
- * print_all - prints out all stuff
- * @format: format is list of types of arguements
+ * _printfloat - prints a float
+ * @list: list to print from
+ */
+void _printfloat(va_list list)
+{
+	printf("%f", va_arg(list, double));
+}
+
+
+
+/**
+ * _printstring - prints a string
+ * @list: list to print from
+ */
+void _printstring(va_list list)
+{
+	char *ptr = va_arg(list, char *);
+
+	if (ptr == NULL)
+	{
+		printf("(nil)");
+		return;
+	}
+	printf("%s", ptr);
+}
+
+
+/**
+ * print_all - prints anything
+ * @format: list of all types of arguments passed to the function
  */
 void print_all(const char * const format, ...)
 {
-	va_list list;
-	char *sep;
-	int i, j;
-	fm_t fm[] = {
-		{"c", print_c},
-		{"i", print_i},
-		{"f", print_f},
-		{"s", print_s},
+	print_id ids[] = {
+		{"c", _printchar},
+		{"i", _printint},
+		{"f", _printfloat},
+		{"s", _printstring},
 		{NULL, NULL}
 	};
-	va_start(list, format);
+	va_list args;
+	int i, j;
+	char *blank, *sep;
+
+	va_start(args, format);
 	i = 0;
-	sep = "";
-	while (format != NULL && format[i] != '\0')
+	blank = "";
+	sep = ", ";
+
+	while (format && format[i])
 	{
 		j = 0;
-		while (j < 4)
+		while (ids[j].id)
 		{
-			if (format[i] == *(fm[j]).fm)
+			if (format[i] == *ids[j].id)
 			{
-				fm[j].p(list, sep);
-				sep = ", ";
+				printf("%s", blank);
+				ids[j].f(args);
+				blank = sep;
 			}
 			j++;
 		}
 		i++;
 	}
 	printf("\n");
-	va_end(list);
+	va_end(args);
 }
