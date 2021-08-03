@@ -1,21 +1,19 @@
 #include "lists.h"
 /**
- * free_listint2 - frees a linked list
- * @head: linked list
- *
+ * pop_listint - Deletes the first element of a list
+ * @head: pointer to the first node of the list
+ * Return: The number inside the node that is deleted
  */
-
-void free_listint2(listint_t **head)
+int pop_listint(listint_t **head)
 {
+	int n;
 	listint_t *tmp;
 
 	if (head == NULL || *head == NULL)
-		return;
-	while (*head != NULL)
-	{
-		tmp = *head;
-		*head = (*head)->next;
-		free(tmp);
-	}
-	head = NULL;
+		return (0);
+	n = (*head)->n;
+	tmp = *head;
+	*head = (*head)->next;
+	free(tmp);
+	return (n);
 }

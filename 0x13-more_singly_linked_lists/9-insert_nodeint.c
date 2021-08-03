@@ -1,121 +1,62 @@
 #include "lists.h"
+listint_t *create_new_node(int n);
 /**
- * list_len - returns the number of elements in a linked list
- * @h: the linked list
- *
- * Return: returns the number of elements in a linked list
- */
-
-size_t list_len(const listint_t *h)
-{
-	size_t i;
-
-	i = 0;
-	while (h != NULL)
-	{
-		i++;
-		h = h->next;
-	}
-	return (i);
-}
-
-/**
- * new_nodeint - Creates a new node for list
- * @n: number to add to new node
- *
- * Return: returns the new node or NULL on failure
- */
-listint_t *new_nodeint(const int n)
-{
-	listint_t *new;
-
-	new = malloc(sizeof(listint_t));
-	if (new == NULL)
-		return (NULL);
-	new->n = n;
-	return (new);
-}
-
-/**
- * add_node - adds a new node at the beginning of a list
- * @head: pointer to the head of the list
- * @n: number to add to new node
- *
- * Return: the address of the new element, or NULL on failure
- */
-listint_t *add_node(listint_t **head, const int n)
-{
-	listint_t *new;
-
-	if (head == NULL)
-		return (NULL);
-	new = new_nodeint(n);
-	if (new == NULL)
-		return (new);
-	new->next = *head;
-	*head = new;
-	return (*head);
-}
-
-/**
-* add_node_end - adds a new node at the end of a linked list
-* @head: pointer to the head of the linked list
-* @n: number to add to new node
-*
-* Return: returns the address of the new element, or NULL on failure
-*/
-listint_t *add_node_end(listint_t **head, const int n)
-{
-	listint_t *new, *last;
-
-	last = *head;
-	if (head == NULL)
-		return (NULL);
-	new = new_nodeint(n);
-	if (new == NULL)
-		return (NULL);
-	new->next = NULL;
-	if (*head == NULL)
-	{
-		*head = new;
-		return (*head);
-	}
-	while (last->next != NULL)
-		last = last->next;
-	last->next = new;
-	return (new);
-}
-
-/**
- * insert_nodeint_at_index - inserts a new node at a given position
- * @head: the linked list
- * @idx: the index where we are inserting
- * @n: number for new node
- *
- * Return: retunrs the address of the new node, or NULL on failure
+ * insert_nodeint_at_index - Inserts a node at a given index
+ * @head: Pointer to the first element of the list
+ * @idx: Index to insert a node at
+ * @n: number to be inserted into the node
+ * Return: The address of the newly created node
  */
 listint_t *insert_nodeint_at_index(listint_t **head, unsigned int idx, int n)
 {
-	unsigned int x;
-	listint_t *new, *temp;
+	unsigned int i;
+	listint_t *tmp;
+	listint_t *tmp_old;
+	listint_t *new_node;
 
-	if (head == NULL || idx > list_len(*head))
+	tmp = *head;
+	if (head == NULL)
 		return (NULL);
-	else if (idx == 0)
-		return (add_node(head, n));
-	else if (idx == list_len(*head))
-		return (add_node_end(head, n));
-	x = 0;
-	new = new_nodeint(n);
-	temp = *head;
-	if (new == NULL)
+	new_node = create_new_node(n);
+	if (new_node == NULL)
 		return (NULL);
-	while (x < idx - 1)
+	if (*head == NULL)
 	{
-		temp = temp->next;
-		x++;
+		*head = new_node;
+		return (new_node);
 	}
-	new->next = temp->next;
-	temp->next = new;
-	return (new);
+
+	if (idx == 0)
+		*head = new_node;
+	for (i = 0; i < idx - 1 && tmp != NULL && idx != 0; i++)
+		tmp = tmp->next;
+	if (tmp == NULL)
+		return (NULL);
+	if (idx == 0)
+		new_node->next = tmp;
+	else
+	{
+		tmp_old = tmp->next;
+		tmp->next = new_node;
+		new_node->next = tmp_old;
+	}
+	return (new_node);
+}
+
+/**
+ * create_new_node - Creates a new node
+ * @n: Value to add to new node
+ * Return: A pointer to a node
+ */
+listint_t *create_new_node(int n)
+{
+	listint_t *new_node;
+
+	new_node = malloc(sizeof(listint_t));
+	if (new_node == NULL)
+		return (NULL);
+	new_node->n = n;
+	new_node->next = NULL;
+
+	return (new_node);
 }
